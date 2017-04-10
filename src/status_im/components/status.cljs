@@ -69,7 +69,7 @@
   (when status
     (call-module #(.moveToInternalStorage status on-result))))
 
-(defn start-node [on-result]
+(defn start-node [config on-result]
   (when status
     (call-module #(.startNode status on-result))))
 

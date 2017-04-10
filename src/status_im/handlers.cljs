@@ -23,6 +23,7 @@
     status-im.protocol.handlers
     status-im.transactions.handlers
     status-im.network.handlers
+    status-im.network-settings.handlers
     status-im.debug.handlers
     status-im.bots.handlers
     [status-im.utils.types :as t]
@@ -46,13 +47,12 @@
 
 (register-handler :initialize-db
   (fn [{:keys [status-module-initialized? status-node-started?
-               network-status network first-run]} _]
+               network-status first-run]} _]
     (data-store/init)
     (assoc app-db :current-account-id nil
                   :network-status network-status
                   :status-module-initialized? (or p/ios? js/goog.DEBUG status-module-initialized?)
                   :status-node-started? status-node-started?
-                  :network (or network :testnet)
                   :first-run (or (nil? first-run) first-run))))
 
 (register-handler :initialize-account-db
@@ -69,6 +69,7 @@
     (fn [_ [_ address]]
       (dispatch [:initialize-account-db])
       (dispatch [:load-processed-messages])
+      ;(dispatch [:load-networks])
       (dispatch [:initialize-protocol address])
       (dispatch [:initialize-sync-listener])
       (dispatch [:initialize-chats])
@@ -87,7 +88,6 @@
     (fn [{:keys [first-run] :as db} [_ callback]]
       (dispatch [:initialize-db])
       (dispatch [:load-accounts])
-
       (dispatch [::init-chats! callback]))))
 
 (register-handler ::init-chats!
@@ -120,27 +120,29 @@
                                    (dispatch [:crypt-initialized]))))))))
 
 (defn node-started [_ _]
-  (log/debug "Started Node")
-  (enet/get-network #(dispatch [:set :network %])))
+  (log/debug "Started Node"))
+  ;(enet/get-network #(dispatch [:set :network %])))
 
-(defn move-to-internal-storage [db]
+(defn move-to-internal-storage [db config]
   (status/move-to-internal-storage
     (fn []
       (status/start-node
+        config
         (fn [result]
           (node-started db result))))))
 
 (register-handler :initialize-geth
   (u/side-effect!
-    (fn [db _]
-      (status/should-move-to-internal-storage?
-        (fn [should-move?]
-          (if should-move?
-            (dispatch [:request-permissions
-                       [:read-external-storage]
-                       #(move-to-internal-storage db)
-                       #(dispatch [:move-to-internal-failure-message])])
-            (status/start-node (fn [result] (node-started db result)))))))))
+    (fn [{:keys [network networks] :as db} [_ config]]
+      (let [config' (or config (get-in networks [network :config]))]
+        (status/should-move-to-internal-storage?
+          (fn [should-move?]
+            (if should-move?
+              (dispatch [:request-permissions
+                         [:read-external-storage]
+                         #(move-to-internal-storage db config')
+                         #(dispatch [:move-to-internal-failure-message])])
+              (status/start-node config' (fn [result] (node-started db result))))))))))
 
 (register-handler :signal-event
   (u/side-effect!

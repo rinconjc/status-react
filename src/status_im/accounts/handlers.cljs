@@ -31,9 +31,9 @@
 (register-handler
   :add-account
   ((after save-account)
-    (fn [{:keys [network] :as db} [_ {:keys [address] :as account}]]
-      (let [account' (assoc account :network network)]
-        (update db :accounts assoc address account')))))
+   (fn [{:keys [network] :as db} [_ {:keys [address] :as account}]]
+    (let [account' (assoc account :network network)]
+      (update db :accounts assoc address account')))))
 
 (defn account-created [result password]
   (let [data       (json->clj result)
@@ -66,9 +66,7 @@
 
 (defn save-account!
   [{:keys [current-account-id accounts network]} _]
-  (let [{acc-network :network :as account}
-        (get accounts current-account-id)
-
+  (let [{acc-network :network :as account} (get accounts current-account-id)
         account' (assoc account :network (or acc-network network))]
     (accounts-store/save account' true)))
 
