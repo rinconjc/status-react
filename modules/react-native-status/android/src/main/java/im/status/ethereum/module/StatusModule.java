@@ -105,6 +105,8 @@ class StatusModule extends ReactContextBaseJavaModule implements LifecycleEventL
 
     private void doStartNode(final String defaultConfig) {
 
+        Statusgo.StopNode();
+
         Activity currentActivity = getCurrentActivity();
 
         String dataFolder = currentActivity.getApplicationInfo().dataDir + "/ethereum/testnet";
@@ -308,7 +310,7 @@ class StatusModule extends ReactContextBaseJavaModule implements LifecycleEventL
         Thread thread = new Thread() {
             @Override
             public void run() {
-                //doStartNode(config);
+                doStartNode(config);
 
                 String result = Statusgo.Login(address, password);
 
