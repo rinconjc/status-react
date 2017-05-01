@@ -69,7 +69,6 @@
     (fn [_ [_ address]]
       (dispatch [:initialize-account-db])
       (dispatch [:load-processed-messages])
-      ;(dispatch [:load-networks])
       (dispatch [:initialize-protocol address])
       (dispatch [:initialize-sync-listener])
       (dispatch [:initialize-chats])
@@ -87,6 +86,7 @@
   (u/side-effect!
     (fn [{:keys [first-run] :as db} [_ callback]]
       (dispatch [:initialize-db])
+      (dispatch [:load-default-networks!])
       (dispatch [:load-accounts])
       (dispatch [::init-chats! callback]))))
 

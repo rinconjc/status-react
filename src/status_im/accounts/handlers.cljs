@@ -24,15 +24,17 @@
 
 
 (defn save-account
-  [{:keys [network]}
+  [{:keys [network networks]}
    [_ account]]
-  (accounts-store/save (assoc account :network network) true))
+  (accounts-store/save (assoc account :network network
+                                      :networks (vals networks)) true))
 
 (register-handler
   :add-account
   ((after save-account)
-   (fn [{:keys [network] :as db} [_ {:keys [address] :as account}]]
-    (let [account' (assoc account :network network)]
+   (fn [{:keys [network networks] :as db} [_ {:keys [address] :as account}]]
+    (let [account' (assoc account :network network
+                                  :networks networks)]
       (update db :accounts assoc address account')))))
 
 (defn account-created [result password]
@@ -150,10 +152,14 @@
 
 (register-handler :set-current-account set-current-account)
 
-(defn load-accounts! [db _]
+(defn load-accounts! [{:keys [networks] :as db} _]
   (let [accounts (->> (accounts-store/get-all)
                       (map (fn [{:keys [address] :as account}]
-                             [address account]))
+                             [address (update account :networks (fn [acc-networks]
+                                                                  (merge networks
+                                                                         (->> acc-networks
+                                                                              (map #(vector (:id %) %))
+                                                                              (into {})))))]))
                       (into {}))
         view (if (empty? accounts)
                :chat

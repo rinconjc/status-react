@@ -159,7 +159,7 @@
    [profile-info-phone-item phone]])
 
 (defn my-profile-info [{:keys [public-key status phone] :as contact}]
-  [view
+  [view st/profile-info-container
    [profile-info-address-item contact]
    [info-item-separator]
    [profile-info-public-key-item public-key contact]
@@ -198,21 +198,21 @@
   [view st/profile
    [status-bar]
    [my-profile-toolbar]
-   [view st/profile-form
-    [profile-badge current-account]
-    [profile-status status true]]
-   [form-spacer]
-   [view actions-list
-    [action-button (label :t/show-qr)
-     :q_r_blue
-     (show-qr current-account :public-key)]]
-   [form-spacer]
-   [view st/profile-info-container
-    [my-profile-info current-account]]
-   [form-spacer]
-   [view
-    [network-settings]
-    [bottom-shadow]]])
+   [scroll-view
+    [view st/profile-form
+     [profile-badge current-account]
+     [profile-status status true]]
+    [form-spacer]
+    [view actions-list
+     [action-button (label :t/show-qr)
+      :q_r_blue
+      (show-qr current-account :public-key)]]
+    [form-spacer]
+    [my-profile-info current-account]
+    [form-spacer]
+    [view
+     [network-settings]
+     [bottom-shadow]]]])
 
 (defview profile []
   [{:keys [pending?

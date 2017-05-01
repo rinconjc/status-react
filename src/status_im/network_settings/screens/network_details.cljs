@@ -9,6 +9,7 @@
     [status-im.network-settings.screen :refer [network-badge]]
     [status-im.components.react :refer [view text text-input icon touchable-highlight]]
     [status-im.components.sticky-button :refer [sticky-button]]
+    [status-im.utils.platform :refer [platform-specific]]
     [status-im.i18n :as i18n]
     [clojure.string :as str]
     [status-im.network-settings.styles :as st]))
@@ -33,16 +34,21 @@
        [touchable-highlight {:on-press #(dispatch [:connect-network id])}
         [view st/connect-button-container
          [view st/connect-button
-          [text {:style st/connect-button-label} (i18n/label :t/connect)]]
-         [text {:style st/connect-button-description} (i18n/label :t/connecting-requires-login)]]])
+          [text {:style st/connect-button-label
+                 :uppercase? (get-in platform-specific [:uppercase?])}
+           (i18n/label :t/connect)]]
+         [text {:style st/connect-button-description}
+          (i18n/label :t/connecting-requires-login)]]])
      [view st/network-config-container
       [text {:style st/network-config-text}
        config]]
      [view {:opacity 0.4}
       [view st/edit-button-container
         [view st/edit-button
-         [text {:style st/edit-button-label} (i18n/label :t/edit-network-config)]]
-       #_[context-menu
+         [text {:style st/edit-button-label
+                :uppercase? (get-in platform-specific [:uppercase?])}
+          (i18n/label :t/edit-network-config)]]
+       #_[context-menu ; TODO should be implemented later
           [view st/edit-button
            [text {:style st/edit-button-label} (i18n/label :t/edit-network-config)]]
           options]

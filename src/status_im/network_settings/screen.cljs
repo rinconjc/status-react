@@ -34,7 +34,7 @@
   [view actions-list
    [view {:opacity 0.4}
     [action-button-view (i18n/label :t/add-new-network) :add_blue]]
-   #_[context-menu
+   #_[context-menu ; TODO should be implemented later
       [action-button-view (i18n/label :t/add-new-network) :add_blue]
       [{:text (i18n/label :t/add-json-file)      :value #(dispatch [:navigate-to :paste-json-text])}
        {:text (i18n/label :t/paste-json-as-text) :value #(dispatch [:navigate-to :paste-json-text])}
@@ -54,12 +54,11 @@
            [text {:style st/network-item-name-text}
             name]
            (when connected?
-             [text {:margin-top 6 :style st/network-item-connected-text}
+             [text {:style st/network-item-connected-text}
               (i18n/label :t/connected)])]]]))))
 
 (defview network-settings []
-  [networks [:get :networks]
-   {:keys [network]} [:get-current-account]]
+  [{:keys [network networks]} [:get-current-account]]
   [view {:flex 1}
    [status-bar]
    [toolbar {:title (i18n/label :t/network-settings)}]

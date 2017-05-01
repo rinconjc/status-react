@@ -71,7 +71,7 @@
 
 (defn start-node [config on-result]
   (when status
-    (call-module #(.startNode status on-result))))
+    (call-module #(.startNode status config on-result))))
 
 (defn stop-rpc-server []
   (when status
@@ -115,9 +115,9 @@
   (when status
     (call-module #(.recoverAccount status passphrase password on-result))))
 
-(defn login [address password on-result]
+(defn login [address password config on-result]
   (when status
-    (call-module #(.login status address password on-result))))
+    (call-module #(.login status address password config on-result))))
 
 (defn complete-transactions
   [hashes password callback]

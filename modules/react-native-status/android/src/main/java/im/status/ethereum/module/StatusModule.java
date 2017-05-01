@@ -103,7 +103,7 @@ class StatusModule extends ReactContextBaseJavaModule implements LifecycleEventL
         this.getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("gethEvent", params);
     }
 
-    private void doStartNode() {
+    private void doStartNode(final String defaultConfig) {
 
         Activity currentActivity = getCurrentActivity();
 
@@ -140,12 +140,13 @@ class StatusModule extends ReactContextBaseJavaModule implements LifecycleEventL
         }
 
         String config;
-        String defaultConfig = Statusgo.GenerateConfig(dataFolder, 3);
         try {
             JSONObject jsonConfig = new JSONObject(defaultConfig);
             jsonConfig.put("LogEnabled", this.debug);
             jsonConfig.put("LogFile", "geth.log");
             jsonConfig.put("LogLevel", "DEBUG");
+            jsonConfig.put("DataDir", currentActivity.getApplicationInfo().dataDir + jsonConfig.get("DataDir"));
+            jsonConfig.put("KeyStoreDir", dataFolder + "/keystore");
 
             config = jsonConfig.toString();
         } catch (JSONException e) {
@@ -240,7 +241,7 @@ class StatusModule extends ReactContextBaseJavaModule implements LifecycleEventL
     }
 
     @ReactMethod
-    public void startNode(Callback callback) {
+    public void startNode(final String config, Callback callback) {
         Log.d(TAG, "startNode");
         status.sendMessage();
         if (!checkAvailability()) {
@@ -251,7 +252,7 @@ class StatusModule extends ReactContextBaseJavaModule implements LifecycleEventL
         Thread thread = new Thread() {
             @Override
             public void run() {
-                doStartNode();
+                doStartNode(config);
             }
         };
 
@@ -298,7 +299,7 @@ class StatusModule extends ReactContextBaseJavaModule implements LifecycleEventL
     }
 
     @ReactMethod
-    public void login(final String address, final String password, final Callback callback) {
+    public void login(final String address, final String password, final String config, final Callback callback) {
         Log.d(TAG, "login");
         if (!checkAvailability()) {
             callback.invoke(false);
@@ -307,6 +308,8 @@ class StatusModule extends ReactContextBaseJavaModule implements LifecycleEventL
         Thread thread = new Thread() {
             @Override
             public void run() {
+                //doStartNode(config);
+
                 String result = Statusgo.Login(address, password);
 
                 callback.invoke(result);

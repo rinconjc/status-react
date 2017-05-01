@@ -24,17 +24,8 @@
   (after save-networks!)
   add-new-networks)
 
-
 (defn generate-config [network-id data-dir]
   (t/clj->json {:NetworkId network-id :DataDir data-dir}))
-
-(register-handler :load-networks
-                  (fn [db _]
-                    (let [networks (->> (networks/get-all)
-                                        (map (fn [{:keys [id] :as network}]
-                                               [id network]))
-                                        (into {}))]
-                      (assoc db :networks networks))))
 
 (register-handler :load-default-networks!
   (fn [db _]
@@ -47,8 +38,7 @@
          new-networks' (->> default-networks
                             (map #(vector (:id %) %))
                             (into {}))]
-     (-> db
-         (update :networks merge new-networks')))))
+     (assoc db :networks new-networks'))))
 
 (register-handler :connect-network
   (u/side-effect!

@@ -63,16 +63,18 @@
   :login-account
   (after
     (fn [db [_ address password]]
-      (status/login address password
-                    (fn [result]
-                      (let [data (json->clj result)
-                            error (:error data)
-                            success (zero? (count error))]
-                        (log/debug "Logged in account: ")
-                        (dispatch [:set-in [:login :processing] false])
-                        (if success
-                          (logged-in db address)
-                          (dispatch [:set-in [:login :error] error])))))))
+      (let [{:keys [network networks]} (get-in db [:accounts address])
+            config (get-in networks [network :config])]
+        (status/login address password config
+                      (fn [result]
+                        (let [data (json->clj result)
+                              error (:error data)
+                              success (zero? (count error))]
+                          (log/debug "Logged in account: ")
+                          (dispatch [:set-in [:login :processing] false])
+                          (if success
+                            (logged-in db address)
+                            (dispatch [:set-in [:login :error] error]))))))))
   (fn [db [_ _ _ account-creation?]]
     (-> db
       (assoc :account-creation? account-creation?)

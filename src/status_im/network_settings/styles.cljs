@@ -6,14 +6,17 @@
   {:background-color common/color-light-gray})
 
 (defstyle badge-name-text
-  {:ios {:font-size      17
-         :letter-spacing -0.2}})
+  {:color   common/color-black
+   :ios     {:font-size      17
+             :letter-spacing -0.2}
+   :android {:font-size      16}})
 
 (defstyle badge-connected-text
-  {:ios {:margin-top     5
-         :font-size      14
-         :letter-spacing -0.2
-         :color          common/color-gray4}})
+  {:color   common/color-gray4
+   :ios     {:margin-top     5
+             :font-size      14
+             :letter-spacing -0.2}
+   :android {:font-size 13}})
 
 (defstyle paste-json-text-input
   {:ios {:font-size      17
@@ -22,100 +25,120 @@
 
 (def connect-button-container
   {:margin-top        8
-   :align-items :center
+   :align-items       :center
    :margin-bottom     16
    :margin-horizontal 16})
 
 (defstyle connect-button
-  {:ios {:height 52
-         :width 343
-         :align-items :center
-         :justify-content :center
-         :background-color common/color-light-blue
-         :border-radius 8
-         :opacity 0.9}})
+  {:height           52
+   :align-items      :center
+   :justify-content  :center
+   :background-color common/color-light-blue
+   :ios              {:width            343
+                      :border-radius    8
+                      :opacity          0.9}
+   :android          {:width            328
+                      :border-radius    4}})
 
 (defstyle connect-button-label
-  {:ios {:font-size 17
-         :color common/color-white
-         :letter-spacing -0.2}})
+  {:color   common/color-white
+   :ios     {:font-size      17
+             :letter-spacing -0.2}
+   :android {:font-size      14}})
 
 (defstyle connect-button-description
-  {:ios {:margin-top 8
-         :height    20
-         :font-size 14
-         :color common/color-gray4
-         :letter-spacing -0.2}})
+  {:color   common/color-gray4
+   :ios     {:margin-top     8
+             :height         20
+             :font-size      14
+             :letter-spacing -0.2}
+   :android {:margin-top     12
+             :font-size      12}})
 
 (defstyle network-config-container
-  {:ios {:height 160
-         :margin-top 8
-         :padding-top 16
-         :padding-left 16
-         :margin-horizontal 16
-         :border-radius 9
-         :opacity 0.9
-         :background-color "#eef2f5"}})
+  {:height            160
+   :margin-top        8
+   :padding-top       16
+   :padding-left      16
+   :margin-horizontal 16
+   :background-color  "#eef2f5"
+   :ios               {:border-radius 9
+                       :opacity       0.9}
+   :android           {:border-radius 4}})
 
 (defstyle network-config-text
-  {:ios {:opacity 0.8
-         :font-size 17
-         :color common/color-black
-         :line-height 24
-         :letter-spacing -0.2}})
+  {:color   common/color-black
+   :ios     {:opacity        0.8
+             :font-size      17
+             :line-height    24
+             :letter-spacing -0.2}
+   :android {:opacity        0.4
+             :font-size      16
+             :line-height    24}})
 
 (def edit-button-container
   {:margin-top        16
-   :align-items :center
+   :align-items       :center
    :margin-bottom     16
    :margin-horizontal 16})
 
 (defstyle edit-button
-  {:ios {:height 52
-         :width 343
-         :align-items :center
-         :justify-content :center
-         :background-color common/color-light-blue-transparent
-         :border-radius 8}})
+  {:height           52
+   :align-items      :center
+   :justify-content  :center
+   :background-color common/color-light-blue-transparent
+   :ios              {:width         343
+                      :border-radius 8}
+   :android          {:width         328
+                      :border-radius 4}})
 
 (defstyle edit-button-label
-  {:ios {:font-size 17
-         :color common/color-light-blue
-         :letter-spacing -0.2}})
+  {:color   common/color-light-blue
+   :ios     {:font-size      17
+             :letter-spacing -0.2}
+   :android {:font-size 14}})
 
 (defstyle edit-button-description
-  {:ios {:margin-top 8
-         :text-align :center
-         :font-size 14
-         :color common/color-gray4
-         :letter-spacing -0.2}})
+  {:text-align :center
+   :color      common/color-gray4
+   :ios        {:margin-top     8
+                :font-size      14
+                :letter-spacing -0.2}
+   :android    {:margin-top     12
+                :font-size      12}})
 
-(defnstyle network-icon [connected? size]
-  {:ios {:width size
-         :height size
-         :border-radius (/ size 2)
-         :background-color (if connected? "#729ae6" "#eef2f5")
-         :align-items :center :justify-content :center}})
+(defn network-icon [connected? size]
+  {:width size
+   :height size
+   :border-radius (/ size 2)
+   :background-color (if connected? "#729ae6" "#eef2f5")
+   :align-items :center :justify-content :center})
 
-(defstyle network-badge
-  {:ios {:height 88
-         :padding-left 16
-         :flex-direction :row
-         :align-items :center}})
+(def network-badge
+  {:height         88
+   :padding-left   16
+   :flex-direction :row
+   :align-items    :center})
 
 (defstyle network-item
-  {:ios {:height 64
-         :flex-direction :row
-         :background-color :white
-         :align-items :center
-         :padding-horizontal 16}})
+  {:flex-direction     :row
+   :background-color   :white
+   :align-items        :center
+   :padding-horizontal 16
+   :ios                {:height 64}
+   :android            {:height 56}})
 
 (defstyle network-item-name-text
-  {:ios {:font-size 17
-         :letter-spacing -0.2
-         :line-height 20}})
+  {:color   common/color-black
+   :ios     {:font-size      17
+             :letter-spacing -0.2
+             :line-height    20}
+   :android {:font-size 16}})
 
 (defstyle network-item-connected-text
-  {:ios {:font-size 14
-         :letter-spacing -0.2
-         :color "#939ba1"}})
+  {:color   common/color-gray4
+   :ios     {:font-size      14
+             :margin-top     6
+             :letter-spacing -0.2}
+   :android {:font-size 12
+             :margin-top 2}})

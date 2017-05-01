@@ -150,7 +150,6 @@
   (status/call-module status/init-jail)
   (dispatch-sync [:reset-app])
   (dispatch [:listen-to-network-status!])
-  (dispatch [:load-default-networks!])
   (dispatch [:initialize-crypt])
   (dispatch [:initialize-geth])
   (dispatch [:load-user-phone-number])

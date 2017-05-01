@@ -24,7 +24,8 @@
    :flex             1})
 
 (defstyle profile-info-container
-  {:background-color color-white})
+  {:background-color color-white
+   :android          {:padding-vertical 8}})
 
 (def status-prompt
   {:padding-left  16
@@ -131,7 +132,7 @@
    :flex-direction     :row
    :align-items        :center
    :background-color   color-white
-   :android            {}
+   :android            {:height 72}
    :ios                {:height 64}})
 
 (def network-settings-text
